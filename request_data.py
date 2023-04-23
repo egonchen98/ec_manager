@@ -9,7 +9,16 @@ def request(req: str):
     service.execute(req, target)
 
 
+def get_req():
+    """Get a MARS request string"""
+    pass
 
+def main():
+    pass
+
+
+if __name__ == '__main__':
+    main()
 
 
 
