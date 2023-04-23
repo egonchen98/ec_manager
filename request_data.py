@@ -1,4 +1,15 @@
 from string import Template
-import ecmwfapi
+from ecmwfapi import ECMWFService
+
+
+def request(req: str):
+    """Send a MARS request to ECMWF with req string"""
+    service = ECMWFService("mars")
+    target = 'test.grib'
+    service.execute(req, target)
+
+
+
+
 
 
