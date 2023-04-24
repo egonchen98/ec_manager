@@ -8,7 +8,9 @@ def request(req: str):
     target = 'test.grib'
     service.execute(req, target)
 
-
+def new_func():
+    """Test merge scene 2"""
+    pass
 
 
 
