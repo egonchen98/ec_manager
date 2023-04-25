@@ -84,7 +84,7 @@ def request_ens(date, number, param):
     levtype=sfc,
     param={param},
     number={number},
-    step=6,
+    step={6*step_start}/to/360/by/{step_by},
     stream=enfo,
     time=00:00:00,
     type={number_type},
@@ -93,7 +93,6 @@ def request_ens(date, number, param):
     '''
     # 31.26, 120.97
     # area=15/70/55/135, 全国数据
-    # step={6*step_start}/to/360/by/{step_by},
     if number_type == 'cf':  # remove "number={number}"
         req = re.sub(' *number=[\d\/]*,\n', '', req)
 
