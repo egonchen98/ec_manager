@@ -24,14 +24,14 @@ def get_req(req_dict: dict):
     expver=1,
         date=$date,
         levtype=sfc,
-        $number_affix number=$number,
+        $number_kw=$number,
         param=$param,
         step=$step,
         stream=enfo,
         time=00:00:00,
         type=$type,
         area=$area,
-        grid=0.25/0.25,
+        grid=0.25/0.25
     """)
 
     req2 = """
@@ -42,7 +42,7 @@ def get_req(req_dict: dict):
     levtype=sfc,
     number=1/to/10,
     param=121/122,
-    step=0/to/360/by/6,
+    step=6/to/360/by/6,  # start_step is 0 if temperature, else 0
     stream=enfo,
     time=00:00:00,
     type=pf,
@@ -64,7 +64,7 @@ class ReqManager:
         self.data_dir = data_dir
 
     def run(self):
-        pool = ThreadPoolExecutor(10)
+        pool = ThreadPoolExecutor(4)
         """Run"""
         for index, row in self.jobs.iterrows():
             file_id = row['file_id']
@@ -72,9 +72,8 @@ class ReqManager:
             if target_file in os.listdir(self.data_dir):
                 continue
             req = get_req(row.to_dict())
-            print(req)
-            # pool.submit(send_request, req, target_file)
-            # time.sleep(2*60)
+            pool.submit(send_request, req, target_file)
+            time.sleep(2*60)
 
         pool.shutdown()
 
