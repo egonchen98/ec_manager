@@ -74,12 +74,12 @@ class MessageSolver:
         df = df.loc[df['addr'].isin(['01', '02', '03', '04'])]
 
         df['total_sec'] = (datetime.datetime.now() - df['datetime']).dt.total_seconds()
+        df = df.loc[df.total_sec < 60*60]
         df['dtime'] = df['total_sec'].diff()
         df = df.fillna(0)
         df['dtime'] = df.apply(lambda row: 0 if row['dtime'] > -300 else 1, axis=1)
         df['dtime'] = df['dtime'].cumsum()
         df.drop_duplicates(subset=['addr', 'dtime'], keep='last', inplace=True)
-        # df = df.loc[df.minutes <= 60]  # TODO: add this line
 
         dfg = df.groupby('dtime')
         dfs = [dfg.get_group(label) for label in dfg.groups.keys()]
