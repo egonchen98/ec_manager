@@ -34,10 +34,12 @@ def get_req(req_dict: dict):
         grid=0.25/0.25
     """)
 
-    req2 = """
-    list,
+    req1 = req.substitute(req_dict)
+
+    req1 = """
+    retrieve,
     class=od,
-    date=2017-01-01/to/2017-12-31,
+    date=2018-08-01/to/2018-08-31,
     expver=1,
     levtype=sfc,
     number=1/to/10,
@@ -48,11 +50,8 @@ def get_req(req_dict: dict):
     type=pf,
     area=31.375/121/31.25/121.125,
     GRID=0.25/0.25,
-    output=cost,
     target='output'
     """
-
-    req1 = req.substitute(req_dict)
 
     return req1
 
