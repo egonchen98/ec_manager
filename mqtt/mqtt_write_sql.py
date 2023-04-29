@@ -16,6 +16,9 @@ class MessageSolver:
         """Write values to mysql table with pymysql library"""
         conn = pymysql.connect(host='124.220.27.50', port=3306, user='daryl', password='ms@imws.C0M',
                                db='cy_soil_hum2023', charset='utf8')
+        conn2 = pymysql.connect(host='139.196.98.192', port=3306, user='cy', password='Hohai2023!',
+                               db='cy2023', charset='utf8')
+        cur2 = conn2.cursor()
         cur = conn.cursor()
 
         # check record existence
@@ -29,14 +32,19 @@ class MessageSolver:
             (datetime,area_datetime,area,temp1,rh1,e_const1,temp2,rh2,e_const2,temp3,rh3,e_const3,rain)
             VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
             """
+
             cur.execute(sql, values)  # TODO: uncomment this line
             conn.commit()
+            cur2.execute(sql, values)
+            conn2.commit()
         except Exception as e:
             print(values)
             print('Error when writing to sql:', e)
         finally:
             cur.close()
             conn.close()
+            cur2.close()
+            conn2.close()
 
     def get_hum(self, string: str):
         """Get soil humidity from hex string"""
@@ -64,8 +72,8 @@ class MessageSolver:
         date_modified = datetime.datetime.fromtimestamp(date_modified)
         time_delta_minutes = (datetime.datetime.now() - date_modified).total_seconds()/60
 
-        # if time_delta_minutes <= 3:
-        #     return None
+        if time_delta_minutes <= 3:
+            return None
 
         df = pd.read_csv(logfile)
         df['datetime'] = pd.to_datetime(df['datetime'])
@@ -115,7 +123,7 @@ class MessageSolver:
     def write_area(self, area):
         """Write records to sql"""
         dfs = self.get_log(area)
-        if dfs is None:  # no new records
+        if not dfs:  # no new records
             return None
         for df in dfs:
             try:
@@ -135,9 +143,7 @@ class MessageSolver:
 
 
 def main():
-    ms = MessageSolver()
-    ms.run()
-    exit()
+    """Main"""
     while True:
         try:
             ms = MessageSolver()
